@@ -10,7 +10,7 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
   minify: {
     collapseWhitespace: isProd,
   }
-})
+});
 const optimization = () => {
   const config = {
     splitChunks: {
