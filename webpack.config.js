@@ -10,7 +10,7 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
   minify: {
     collapseWhitespace: isProd,
   }
-})
+});
 const optimization = () => {
   const config = {
     splitChunks: {
@@ -25,9 +25,28 @@ const optimization = () => {
   }
   return config;
 }
+
+const babelOptions = preset => {
+  const opts = {
+    presets: [
+      '@babel/preset-env'
+    ]
+  }
+
+  if(preset) {
+    opts.presets.push(preset)
+  }
+
+  return opts;
+}
 module.exports = {
   context: path.resolve(__dirname, 'src'),
-  entry: './index.js',
+  entry: {
+    main: [
+      '@babel/polyfill',
+      './index.jsx'
+    ],
+  },
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -46,6 +65,22 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: babelOptions()
+        }
+      },
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: babelOptions('@babel/preset-react')
+        }
       }
     ],
   },
